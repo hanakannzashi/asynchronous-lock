@@ -70,4 +70,4 @@ Asynchronous executions may cause unexpected result, that's why we need locks in
 
 * `Lock`: See [Lock.spec.ts](./test/Lock.spec.ts)
 * `ResourceLock`: See [ResourceLock.spec.ts](./test/ResourceLock.spec.ts)
-* `MultiResourceLock`: See [MultiResourceLock.spec.ts](./test/MultiResourceLock.spec.ts)
+* `ResourcesLock`: See [ResourcesLock.spec.ts](./test/ResourcesLock.spec.ts)

@@ -1,7 +1,7 @@
 /**
  * Non-reentrant, mutual-exclusive, fair lock
  * that allows multiple asynchronous processes
- * to access a single resource synchronously.
+ * to access a resource synchronously.
  */
 export class ResourceLock<T> {
   private value: T;

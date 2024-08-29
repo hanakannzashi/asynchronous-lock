@@ -1,9 +1,9 @@
-import { MultiResourceLock } from '../src';
+import { ResourcesLock } from '../src';
 import { Database, increase } from './common';
 
-test('MultiResourceLock', async () => {
+test('ResourcesLock', async () => {
   // Create databases with lock
-  const lock = MultiResourceLock.new([Database.create(), Database.create()]);
+  const lock = ResourcesLock.new([Database.create(), Database.create()]);
 
   // Execute asynchronously
   await Promise.all([
