@@ -1,4 +1,3 @@
 {
-  "preset": "ts-jest",
-  "testTimeout": 10000
+  "preset": "ts-jest"
 }

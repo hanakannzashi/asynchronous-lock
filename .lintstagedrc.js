@@ -1,6 +1,6 @@
 module.exports = {
   "*.ts": () => [
-    "pnpm lint",
-    "pnpm prettier",
+    "eslint {src,test}/{**,}/*.ts --fix",
+    "prettier {src,test}/{**,}/*.ts --write",
   ],
 };

@@ -1,39 +1,49 @@
-import { Lock } from './Lock';
-import { ResourceProcess } from './types';
-
 /**
- * Allows multiple asynchronous processes to access the same resource synchronously.
+ * Non-reentrant, mutual-exclusive, fair lock
+ * that allows multiple asynchronous processes
+ * to access a single resource synchronously.
  */
 export class ResourceLock<T> {
-  private readonly resource: T;
-  private readonly lock: Lock;
+  private value: T;
+  private state: boolean;
+  private readonly queue: (() => void)[];
 
-  constructor(resource: T) {
-    this.resource = resource;
-    this.lock = new Lock();
+  private constructor(value: T) {
+    this.value = value;
+    this.state = false;
+    this.queue = [];
   }
 
-  get isAcquired(): boolean {
-    return this.lock.isAcquired;
+  static new<T>(value: T): ResourceLock<T> {
+    return new ResourceLock(value);
   }
 
-  tryAcquire(): T | undefined {
-    if (!this.lock.tryAcquire()) {
+  async with<R>(process: (value: T, setValue: (value: T) => void) => R | PromiseLike<R>): Promise<R> {
+    await this.acquire();
+    try {
+      return await process(this.value, (value) => (this.value = value));
+    } finally {
+      this.release();
+    }
+  }
+
+  private async acquire(): Promise<void> {
+    if (this.tryAcquire()) {
       return;
     }
-    return this.resource;
+    await this.wait();
   }
 
-  async acquire(): Promise<T> {
-    await this.lock.acquire();
-    return this.resource;
+  private tryAcquire(): boolean {
+    return this.state ? false : (this.state = true);
   }
 
-  release() {
-    this.lock.release();
+  private async wait() {
+    await new Promise<void>((resolve) => this.queue.push(() => resolve()));
   }
 
-  async process<R>(process: ResourceProcess<R, T>): Promise<R> {
-    return this.lock.process(() => process(this.resource));
+  private release() {
+    const notify = this.queue.shift();
+    notify ? notify() : (this.state = false);
   }
 }

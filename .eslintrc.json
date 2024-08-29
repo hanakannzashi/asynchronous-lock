@@ -9,7 +9,6 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
-    "eol-last": "error",
-    "no-constant-condition": "off"
+    "eol-last": "error"
   }
 }

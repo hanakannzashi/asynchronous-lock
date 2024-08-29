@@ -1,8 +1,7 @@
 {
   "name": "asynchronous-lock",
-  "version": "1.0.0",
-  "license": "MIT",
-  "description": "Asynchronous lock implementation.",
+  "version": "0.0.1",
+  "description": "Provide multiple asynchronous locks.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "commonjs",
