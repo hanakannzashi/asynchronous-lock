@@ -1,19 +1,14 @@
-/**
- * Non-reentrant, mutual-exclusive, fair lock
- * that allows multiple asynchronous processes
- * to execute synchronously.
- */
-export class Lock {
-  private state: boolean;
+export class Semaphore {
+  private permit: number;
   private readonly queue: (() => void)[];
 
-  private constructor() {
-    this.state = false;
+  private constructor(permit = 1) {
+    this.permit = permit;
     this.queue = [];
   }
 
-  static new(): Lock {
-    return new Lock();
+  static new(n?: number): Semaphore {
+    return new Semaphore(n);
   }
 
   async with<R>(process: () => R | PromiseLike<R>): Promise<R> {
@@ -33,7 +28,12 @@ export class Lock {
   }
 
   private tryAcquire(): boolean {
-    return this.state ? false : (this.state = true);
+    if (this.permit > 0) {
+      this.permit--;
+      return true;
+    } else {
+      return false;
+    }
   }
 
   private async wait() {
@@ -42,6 +42,6 @@ export class Lock {
 
   private release() {
     const notify = this.queue.shift();
-    notify ? notify() : (this.state = false);
+    notify ? notify() : this.permit++;
   }
 }
