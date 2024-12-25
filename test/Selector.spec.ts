@@ -1,9 +1,9 @@
-import { ResourceLock } from '../src';
+import { Selector } from '../src';
 import { Database, increase } from './common';
 
-test('ResourceLock', async () => {
-  // Create a database with lock
-  const lock = ResourceLock.new(Database.create());
+test('Selector', async () => {
+  // Create databases with lock
+  const lock = Selector.new([Database.create(), Database.create()]);
 
   // Execute asynchronously
   await Promise.all([
@@ -15,6 +15,12 @@ test('ResourceLock', async () => {
   ]);
 
   // Check result
-  const count = await lock.with((database) => database.read());
+  const count = await lock.withMany(async (databases) => {
+    let count = 0;
+    for (const database of databases) {
+      count += await database.read();
+    }
+    return count;
+  });
   expect(count).toEqual(5);
 });

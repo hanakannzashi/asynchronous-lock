@@ -1,12 +1,12 @@
-import { Lock } from '../src';
+import { Semaphore } from '../src';
 import { Database, increase } from './common';
 
-test('Lock', async () => {
+test('Semaphore', async () => {
   // Create a database
   const database = Database.create();
 
   // Create a lock
-  const lock = Lock.new();
+  const lock = Semaphore.new();
 
   // Execute asynchronously
   await Promise.all([

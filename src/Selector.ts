@@ -1,9 +1,4 @@
-/**
- * Non-reentrant, mutual-exclusive, fair lock
- * that allows multiple asynchronous processes
- * to access resources synchronously.
- */
-export class ResourcesLock<T> {
+export class Selector<T> {
   private readonly values: T[];
   private readonly states: boolean[];
   private readonly queue: ((indexes: number[]) => void)[];
@@ -16,8 +11,8 @@ export class ResourcesLock<T> {
     this.permits = [];
   }
 
-  static new<T>(values: T[]): ResourcesLock<T> {
-    return new ResourcesLock(values);
+  static new<T>(values: T[]): Selector<T> {
+    return new Selector(values);
   }
 
   async with<R>(process: (value: T, setValue: (value: T) => void) => R | PromiseLike<R>): Promise<R> {

@@ -68,6 +68,6 @@ Asynchronous executions may cause unexpected result, that's why we need locks in
 
 ## Usage
 
-* `Lock`: See [Lock.spec.ts](./test/Lock.spec.ts)
-* `ResourceLock`: See [ResourceLock.spec.ts](./test/ResourceLock.spec.ts)
-* `ResourcesLock`: See [ResourcesLock.spec.ts](./test/ResourcesLock.spec.ts)
+* `Semaphore`: See [Semaphore.spec.ts](./test/Semaphore.spec.ts)
+* `Mutex`: See [Mutex.spec.ts](./test/Mutex.spec.ts)
+* `Selector`: See [Selector.spec.ts](./test/Selector.spec.ts)

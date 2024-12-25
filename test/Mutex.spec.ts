@@ -1,9 +1,9 @@
-import { ResourcesLock } from '../src';
+import { Mutex } from '../src';
 import { Database, increase } from './common';
 
-test('ResourcesLock', async () => {
-  // Create databases with lock
-  const lock = ResourcesLock.new([Database.create(), Database.create()]);
+test('Mutex', async () => {
+  // Create a database with lock
+  const lock = Mutex.new(Database.create());
 
   // Execute asynchronously
   await Promise.all([
@@ -15,12 +15,6 @@ test('ResourcesLock', async () => {
   ]);
 
   // Check result
-  const count = await lock.withMany(async (databases) => {
-    let count = 0;
-    for (const database of databases) {
-      count += await database.read();
-    }
-    return count;
-  });
+  const count = await lock.with((database) => database.read());
   expect(count).toEqual(5);
 });
