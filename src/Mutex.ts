@@ -1,11 +1,11 @@
 export class Mutex<T> {
   private value: T;
-  private state: boolean;
+  private flag: boolean;
   private readonly queue: (() => void)[];
 
   private constructor(value: T) {
     this.value = value;
-    this.state = false;
+    this.flag = false;
     this.queue = [];
   }
 
@@ -30,7 +30,7 @@ export class Mutex<T> {
   }
 
   private tryAcquire(): boolean {
-    return this.state ? false : (this.state = true);
+    return this.flag ? false : (this.flag = true);
   }
 
   private async wait() {
@@ -39,6 +39,6 @@ export class Mutex<T> {
 
   private release() {
     const notify = this.queue.shift();
-    notify ? notify() : (this.state = false);
+    notify ? notify() : (this.flag = false);
   }
 }

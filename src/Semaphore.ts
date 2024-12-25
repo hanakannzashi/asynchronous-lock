@@ -1,9 +1,9 @@
 export class Semaphore {
-  private state: number;
+  private permit: number;
   private readonly queue: (() => void)[];
 
   private constructor(permit = 1) {
-    this.state = permit;
+    this.permit = permit;
     this.queue = [];
   }
 
@@ -28,8 +28,8 @@ export class Semaphore {
   }
 
   private tryAcquire(): boolean {
-    if (this.state > 0) {
-      this.state--;
+    if (this.permit > 0) {
+      this.permit--;
       return true;
     } else {
       return false;
@@ -42,6 +42,6 @@ export class Semaphore {
 
   private release() {
     const notify = this.queue.shift();
-    notify ? notify() : this.state++;
+    notify ? notify() : this.permit++;
   }
 }

@@ -1,14 +1,14 @@
 export class Selector<T> {
   private readonly values: T[];
-  private readonly states: boolean[];
-  private readonly queue: ((indexes: number[]) => void)[];
+  private readonly flags: boolean[];
   private readonly permits: number[];
+  private readonly queue: ((indexes: number[]) => void)[];
 
   private constructor(values: T[]) {
     this.values = Array.from(values);
-    this.states = values.map(() => false);
-    this.queue = [];
+    this.flags = values.map(() => false);
     this.permits = [];
+    this.queue = [];
   }
 
   static new<T>(values: T[]): Selector<T> {
@@ -52,14 +52,14 @@ export class Selector<T> {
     if (indexes.length < permit) {
       return undefined;
     }
-    indexes.forEach((index) => (this.states[index] = true));
+    indexes.forEach((index) => (this.flags[index] = true));
     return indexes;
   }
 
   private async wait(permit: number): Promise<number[]> {
     return new Promise<number[]>((resolve) => {
-      this.queue.push((indexes) => resolve(indexes));
       this.permits.push(permit);
+      this.queue.push((indexes) => resolve(indexes));
     });
   }
 
@@ -74,19 +74,19 @@ export class Selector<T> {
         break;
       }
 
-      this.queue.shift();
       this.permits.shift();
+      this.queue.shift();
 
       notify(indexes.splice(0, permit));
     }
 
-    indexes.forEach((index) => (this.states[index] = false));
+    indexes.forEach((index) => (this.flags[index] = false));
   }
 
   private getAcquirable(): number[] {
     const indexes: number[] = [];
 
-    this.states.forEach((state, index) => {
+    this.flags.forEach((state, index) => {
       if (state) {
         return;
       }
