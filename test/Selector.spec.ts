@@ -2,20 +2,17 @@ import { Selector } from '../src';
 import { Database, increase } from './common';
 
 test('Selector', async () => {
-  // Create databases with lock
-  const lock = Selector.new([Database.create(), Database.create()]);
+  const selector = Selector.new([Database.create(), Database.create()]);
 
-  // Execute asynchronously
   await Promise.all([
-    lock.with((database) => increase(database)),
-    lock.with((database) => increase(database)),
-    lock.with((database) => increase(database)),
-    lock.with((database) => increase(database)),
-    lock.with((database) => increase(database)),
+    selector.with((database) => increase(database)),
+    selector.with((database) => increase(database)),
+    selector.with((database) => increase(database)),
+    selector.with((database) => increase(database)),
+    selector.with((database) => increase(database)),
   ]);
 
-  // Check result
-  const count = await lock.withMany(async (databases) => {
+  const count = await selector.withMany(async (databases) => {
     let count = 0;
     for (const database of databases) {
       count += await database.read();
