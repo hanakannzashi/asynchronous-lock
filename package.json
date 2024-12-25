@@ -1,6 +1,6 @@
 {
   "name": "asynchronous-lock",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Provide many asynchronous locks.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
