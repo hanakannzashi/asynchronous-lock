@@ -1,5 +1,5 @@
 # Asynchronous Lock
-This package provides multiple locks for synchronizing asynchronous processes
+This package provides many locks for synchronizing asynchronous processes
 
 ## Install
 ```shell
