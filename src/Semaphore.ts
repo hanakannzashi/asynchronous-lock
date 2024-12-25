@@ -1,10 +1,10 @@
 export class Semaphore {
   private permit: number;
-  private readonly queue: (() => void)[];
+  private readonly notifiers: (() => void)[];
 
   private constructor(permit = 1) {
     this.permit = permit;
-    this.queue = [];
+    this.notifiers = [];
   }
 
   static new(n?: number): Semaphore {
@@ -37,11 +37,11 @@ export class Semaphore {
   }
 
   private async wait() {
-    await new Promise<void>((resolve) => this.queue.push(() => resolve()));
+    await new Promise<void>((resolve) => this.notifiers.push(() => resolve()));
   }
 
   private release() {
-    const notify = this.queue.shift();
+    const notify = this.notifiers.shift();
     notify ? notify() : this.permit++;
   }
 }

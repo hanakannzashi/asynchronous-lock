@@ -1,12 +1,12 @@
 export class Mutex<T> {
   private value: T;
   private flag: boolean;
-  private readonly queue: (() => void)[];
+  private readonly notifiers: (() => void)[];
 
   private constructor(value: T) {
     this.value = value;
     this.flag = false;
-    this.queue = [];
+    this.notifiers = [];
   }
 
   static new<T>(value: T): Mutex<T> {
@@ -34,11 +34,11 @@ export class Mutex<T> {
   }
 
   private async wait() {
-    await new Promise<void>((resolve) => this.queue.push(() => resolve()));
+    await new Promise<void>((resolve) => this.notifiers.push(() => resolve()));
   }
 
   private release() {
-    const notify = this.queue.shift();
+    const notify = this.notifiers.shift();
     notify ? notify() : (this.flag = false);
   }
 }
