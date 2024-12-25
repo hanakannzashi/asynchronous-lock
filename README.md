@@ -46,10 +46,8 @@ We must know why do we need locks in JavaScript which is a single-threaded langu
 
     ```ts
     async function test() {
-      // Create a database
       const database = Database.create();
-    
-      // Execute asynchronously
+      
       await Promise.all([
         increase(database),
         increase(database),
@@ -57,8 +55,7 @@ We must know why do we need locks in JavaScript which is a single-threaded langu
         increase(database),
         increase(database),
       ]);
-    
-      // Check result
+      
       const count = await database.read();
       console.log(count); // Unexpected result 1 (expect to be 5)
     }

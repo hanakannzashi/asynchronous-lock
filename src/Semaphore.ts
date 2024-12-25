@@ -2,13 +2,13 @@ export class Semaphore {
   private permit: number;
   private readonly notifiers: (() => void)[];
 
-  private constructor(permit = 1) {
+  private constructor(permit: number) {
     this.permit = permit;
     this.notifiers = [];
   }
 
-  static new(n?: number): Semaphore {
-    return new Semaphore(n);
+  static new(permit = 1): Semaphore {
+    return new Semaphore(permit);
   }
 
   async with<R>(process: () => R | PromiseLike<R>): Promise<R> {
