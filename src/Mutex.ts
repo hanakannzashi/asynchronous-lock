@@ -13,7 +13,9 @@ export class Mutex<T> {
     return new Mutex(value);
   }
 
-  async with<R>(process: (value: T, setValue: (value: T) => void) => R | PromiseLike<R>): Promise<R> {
+  async with<R>(
+    process: (value: T, setValue: (value: T) => void) => R | PromiseLike<R>,
+  ): Promise<R> {
     await this.acquire();
     try {
       return await process(this.value, (value) => (this.value = value));

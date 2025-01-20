@@ -15,17 +15,25 @@ export class Selector<T> {
     return new Selector(values);
   }
 
-  async with<R>(process: (value: T, setValue: (value: T) => void) => R | PromiseLike<R>): Promise<R> {
+  async with<R>(
+    process: (value: T, setValue: (value: T) => void) => R | PromiseLike<R>,
+  ): Promise<R> {
     const [index] = await this.acquire(1);
     try {
-      return await process(this.values[index], (value) => (this.values[index] = value));
+      return await process(
+        this.values[index],
+        (value) => (this.values[index] = value),
+      );
     } finally {
       this.release([index]);
     }
   }
 
   async withMany<R>(
-    process: (values: T[], setValues: ((value: T) => void)[]) => R | PromiseLike<R>,
+    process: (
+      values: T[],
+      setValues: ((value: T) => void)[],
+    ) => R | PromiseLike<R>,
     permit?: number,
   ): Promise<R> {
     const indexes = await this.acquire(permit ?? this.values.length);
